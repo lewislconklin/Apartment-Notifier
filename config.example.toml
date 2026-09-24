@@ -1,0 +1,82 @@
+[app]
+database = "data/notifier.sqlite3"
+poll_interval_seconds = 40
+# Refresh the complete inventory periodically; routine checks fetch page 1 only.
+full_scan_interval_seconds = 3600
+# The first successful run records existing listings without alerting by default.
+notify_existing_on_first_run = false
+notify_price_changes = true
+
+[streeteasy]
+# Leave this false until StreetEasy has authorized automated access.
+allow_live_requests = false
+# Add a ticket, agreement, or email reference after permission is received.
+permission_reference = ""
+# Each user must set this to the exact scope covered by their own permission.
+allowed_url_prefix = "https://streeteasy.com/for-rent/nyc"
+minimum_request_interval_seconds = 40
+# Stop instead of silently scanning an unexpectedly large number of pages.
+max_pages = 25
+rate_limit_state_file = "data/streeteasy-rate-limit"
+# If access is approved, identify the client and provide a real contact address.
+user_agent = "ApartmentNotifier/0.2 (+mailto:you@example.com)"
+timeout_seconds = 20
+
+[[searches]]
+name = "example-search"
+# Paste the complete URL from a configured StreetEasy rental results page.
+url = "https://streeteasy.com/for-rent/nyc"
+
+[searches.filters]
+neighborhoods = ["Greenpoint", "Williamsburg"]
+min_price = 3000
+max_price = 5000
+min_bedrooms = 1
+max_bedrooms = 2
+min_bathrooms = 1
+# Optional latest acceptable availability date (inclusive).
+# available_on_or_before = 2026-10-15
+required_keywords = []
+excluded_keywords = ["short term"]
+required_amenities = []
+
+# Optional local map exclusions. Coordinates are [latitude, longitude].
+[[searches.filters.excluded_areas]]
+name = "example excluded pocket"
+points = [
+  [40.720, -73.980],
+  [40.730, -73.980],
+  [40.730, -73.970],
+  [40.720, -73.970],
+]
+
+[notifications.email]
+enabled = false
+host = "smtp.gmail.com"
+port = 587
+starttls = true
+use_ssl = false
+username_env = "SMTP_USERNAME"
+password_env = "SMTP_PASSWORD"
+# Optional macOS Keychain fallback. Set both values or leave both empty.
+password_keychain_service = ""
+password_keychain_account = ""
+from_address = "alerts@example.com"
+to_addresses = ["you@example.com"]
+
+[notifications.sms]
+enabled = false
+account_sid_env = "TWILIO_ACCOUNT_SID"
+auth_token_env = "TWILIO_AUTH_TOKEN"
+from_number = "+12125550100" # Fictional 555 example number.
+to_numbers = ["+12125550101"] # Fictional 555 example number.
+
+[notifications.imessage]
+# Free local alternative to SMS when this runs on a Mac signed into Messages.
+enabled = false
+# Set one or more recipients here. Each recipient gets a separate message.
+recipients = []
+# Optional: send to this existing Messages group instead of individual recipients.
+chat_id = ""
+# Used as a fallback when recipients is empty. Comma-separated values are allowed.
+recipient_env = "IMESSAGE_RECIPIENT"

@@ -1,0 +1,13 @@
+#!/bin/sh
+set -eu
+
+PROJECT_DIRECTORY=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+PYTHON="$PROJECT_DIRECTORY/.venv/bin/python"
+
+if [ ! -x "$PYTHON" ]; then
+    echo "Apartment Notifier is not set up yet. Run ./setup-macos.sh first." >&2
+    exit 2
+fi
+
+CONFIG_PATH=${APARTMENT_NOTIFIER_CONFIG:-"$PROJECT_DIRECTORY/config.toml"}
+exec "$PYTHON" -m apartment_notifier --config "$CONFIG_PATH" "$@"

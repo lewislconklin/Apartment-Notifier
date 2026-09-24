@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "apartment-notifier"
+version = "0.2.0"
+description = "Portable, permission-gated StreetEasy rental listing notifier for macOS"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Private use" }
+
+[project.scripts]
+apartment-notifier = "apartment_notifier.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["apartment_notifier*"]
+
+[tool.unittest]
+start-directory = "tests"
